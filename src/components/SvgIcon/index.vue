@@ -1,48 +1,48 @@
+<script setup>
+import { isExternal } from "@/utils/validate";
+import { computed } from "vue";
+
+const props = defineProps({
+  name: {
+    type: String,
+    required: true,
+    default: ""
+  },
+  className: {
+    type: String,
+    default: ""
+  }
+});
+
+const isExternalIcon = computed(() => isExternal(props.name));
+const iconName = computed(() => `#icon-${props.name}`);
+const svgClass = computed(() => {
+  if (props.className) {
+    return "svg-icon " + props.className;
+  } else {
+    return "svg-icon";
+  }
+});
+// 外链 icon
+const styleExternalIcon = computed(() => {
+  return {
+    mask: `url(${props.name}) no-repeat 50% 50%`,
+    "-webkit-mask": `url(${props.name}) no-repeat 50% 50%`
+  };
+});
+</script>
+
 <template>
-  <div v-if="isExternal" :style="styleExternalIcon" class="svg-external-icon svg-icon" v-on="$listeners" />
-  <svg v-else :class="svgClass" aria-hidden="true" v-on="$listeners">
+  <div
+    v-if="isExternalIcon"
+    :style="styleExternalIcon"
+    class="svg-external-icon svg-icon"
+    v-bind="$attrs"
+  />
+  <svg v-else :class="svgClass" aria-hidden="true" v-bind="$attrs">
     <use :xlink:href="iconName" />
   </svg>
 </template>
-
-<script>
-import { isExternal } from '@/utils/validate'
-
-export default {
-  name: 'SvgIcon',
-  props: {
-    iconClass: {
-      type: String,
-      required: true
-    },
-    className: {
-      type: String,
-      default: ''
-    }
-  },
-  computed: {
-    isExternal() {
-      return isExternal(this.iconClass)
-    },
-    iconName() {
-      return `#icon-${this.iconClass}`
-    },
-    svgClass() {
-      if (this.className) {
-        return 'svg-icon ' + this.className
-      } else {
-        return 'svg-icon'
-      }
-    },
-    styleExternalIcon() {
-      return {
-        mask: `url(${this.iconClass}) no-repeat 50% 50%`,
-        '-webkit-mask': `url(${this.iconClass}) no-repeat 50% 50%`
-      }
-    }
-  }
-}
-</script>
 
 <style scoped>
 .svg-icon {
@@ -55,7 +55,7 @@ export default {
 
 .svg-external-icon {
   background-color: currentColor;
-  mask-size: cover!important;
+  mask-size: cover !important;
   display: inline-block;
 }
 </style>
